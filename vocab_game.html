@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>B1+ Word Master – Luyện từ vựng tiếng Anh</title>
+<style>
+  :root {
+    --surface-0: #f8fafc;
+    --surface-1: #f1f5f9;
+    --surface-2: #e2e8f0;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --border-accent: #6ee7b7;
+    --border-success: #4ade80;
+    --border-danger: #f87171;
+    --bg-accent: #f0fdf4;
+    --bg-success: #f0fdf4;
+    --bg-danger: #fff1f2;
+    --bg-warning: #fffbeb;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --text-accent: #059669;
+    --text-success: #16a34a;
+    --text-danger: #dc2626;
+    --text-warning: #d97706;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: var(--text-primary); }
+  #root { max-width: 540px; margin: 0 auto; min-height: 100vh; }
+
+  @keyframes pop { 0%{transform:scale(0.7);opacity:0} 70%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+  @keyframes glow { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0)} 50%{box-shadow:0 0 0 8px rgba(34,197,94,0.15)} }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+
+  .card-pop { animation: pop 0.35s ease both; }
+  .card-shake { animation: shake 0.4s ease; }
+  .slide-up { animation: slideUp 0.3s ease both; }
+  .correct-glow { animation: glow 0.8s ease; }
+  .btn-choice { transition: transform 0.15s, background 0.2s, border 0.2s; cursor: pointer; }
+  .btn-choice:hover:not(:disabled) { transform: translateY(-2px); }
+  .btn-choice:active:not(:disabled) { transform: scale(0.97); }
+  .pulse-anim { animation: pulse 2s infinite; }
+
+  /* Layout helpers */
+  .screen { padding: 1.5rem; }
+  .screen-game { padding: 1.25rem; }
+  .screen-result { padding: 2rem 1.5rem; text-align: center; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .flex-row { display: flex; gap: 8px; }
+  .stat-card { background: var(--surface-1); border-radius: 10px; padding: 10px; text-align: center; }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; line-height: 1.3; }
+  .stat-value { font-size: 22px; font-weight: 500; }
+  .pill-btn { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+  .card-box { border-radius: 12px; overflow: hidden; margin-bottom: 1rem; border: 0.5px solid var(--border); background: var(--surface-1); }
+  .illus-area { height: 220px; background: var(--surface-0); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .word-info { padding: 1rem 1.25rem; }
+  .tag { font-size: 12px; background: var(--surface-2); color: var(--text-secondary); padding: 3px 10px; border-radius: 20px; border: 0.5px solid var(--border); }
+  .ipa { font-size: 13px; color: var(--text-muted); font-family: monospace; }
+  .speak-btn { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 14px; color: var(--text-secondary); transition: transform 0.15s; }
+  .speak-btn:hover { transform: scale(1.1); }
+  .progress-bar { background: var(--surface-1); border-radius: 4px; height: 6px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,#6EE7B7,#3B82F6); border-radius: 4px; transition: width 0.5s ease; }
+  .input-field { flex: 1; padding: 12px 14px; border-radius: 10px; font-size: 14px; background: var(--surface-2); color: var(--text-primary); outline: none; transition: border 0.2s; }
+  .ok-btn { padding: 12px 18px; background: var(--text-primary); color: var(--surface-2); border: none; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .feedback-box { margin-top: 8px; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; animation: slideUp 0.25s ease; }
+  .main-btn { width: 100%; padding: 14px; background: var(--text-primary); color: var(--surface-2); border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: transform 0.15s; }
+  .main-btn:hover { transform: scale(1.02); }
+  .secondary-btn { flex: 1; padding: 13px; background: transparent; color: var(--text-primary); border: 0.5px solid var(--border-strong); border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .mode-tab { flex: 1; padding: 8px 0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 12px; transition: all 0.2s; }
+  .srs-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; transition: background 0.3s; }
+  .due-banner { background: var(--bg-accent); border: 1px solid var(--border-accent); border-radius: 10px; padding: 12px 16px; margin-bottom: 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; animation: pulse 2s infinite; }
+  .flashcard-word { font-size: 36px; font-weight: 500; margin-bottom: 6px; animation: pop 0.3s ease; }
+  .flashcard-hint { font-size: 14px; color: var(--text-muted); }
+  .flashcard-vn { font-size: 28px; font-weight: 500; color: var(--text-accent); margin-bottom: 6px; }
+  .flashcard-ex { font-size: 15px; color: var(--text-secondary); font-style: italic; line-height: 1.6; }
+  .streak-msg { margin-top: 10px; text-align: center; font-size: 12px; color: var(--text-secondary); animation: pulse 1s infinite; }
+  .fb-btn { flex: 1; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: transform 0.15s; }
+  .fb-btn:hover { transform: scale(1.02); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+// ── SVG illustrations as strings ──
+const ILLUS_SVG = {
+  warehouse: `<svg viewBox="0 0 200 120" style="width:100%;height:100%"><rect x="20" y="50" width="160" height="60" rx="3" fill="#CBD5E1"/><polygon points="10,50 100,10 190,50" fill="#94A3B8"/><rect x="80" y="80" width="40" height="30" fill="#64748B"/><rect x="30" y="62" width="30" height="20" fill="#E2E8F0"/><rect x="140" y="62" width="30" height="20" fill="#E2E8F0"/><rect x="55" y="65" width="2" height="14" fill="#94A3B8"/><rect x="62" y="65" width="2" height="14" fill="#94A3B8"/><rect x="148" y="65" width="2" height="14" fill="#94A3B8"/><rect x="155" y="65" width="2" height="14" fill="#94A3B8"/><rect x="25" y="95" width="60" height="8" rx="1" fill="#475569"/><rect x="95" y="95" width="40" height="8" rx="1" fill="#475569"/><rect x="145" y="95" width="30" height="8" rx="1" fill="#475569"/></svg>`,
+  customs: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#EFF6FF"/><rect x="10" y="30" width="80" height="70" rx="4" fill="#BFDBFE"/><rect x="20" y="45" width="60" height="8" rx="2" fill="#3B82F6"/><rect x="20" y="58" width="45" height="8" rx="2" fill="#93C5FD"/><rect x="20" y="71" width="50" height="8" rx="2" fill="#93C5FD"/><rect x="110" y="30" width="80" height="70" rx="4" fill="#DBEAFE"/><text x="150" y="72" text-anchor="middle" font-size="28">🛃</text><rect x="90" y="55" width="20" height="8" rx="2" fill="#1D4ED8"/><rect x="90" y="55" width="20" height="8" rx="2" fill="#1D4ED8"><animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/></rect></svg>`,
+  shipment: `<svg viewBox="0 0 200 120"><rect x="0" y="60" width="200" height="60" fill="#F0FDF4"/><rect x="0" y="55" width="200" height="8" fill="#86EFAC"/><rect x="10" y="25" width="100" height="38" rx="3" fill="#FEF3C7"/><rect x="18" y="32" width="35" height="6" rx="2" fill="#F59E0B"/><rect x="18" y="42" width="25" height="4" rx="2" fill="#FCD34D"/><rect x="60" y="32" width="40" height="24" rx="2" fill="#FDE68A" stroke="#F59E0B" stroke-width="1"/><text x="80" y="48" text-anchor="middle" font-size="14">📦</text><text x="158" y="53" text-anchor="middle" font-size="13">🚚</text></svg>`,
+  delay: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#FFF7ED"/><circle cx="100" cy="60" r="45" fill="white" stroke="#FB923C" stroke-width="3"/><line x1="100" y1="60" x2="100" y2="25" stroke="#1E293B" stroke-width="3" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 100 60" to="360 100 60" dur="6s" repeatCount="indefinite"/></line><line x1="100" y1="60" x2="130" y2="60" stroke="#64748B" stroke-width="2" stroke-linecap="round"/><circle cx="100" cy="60" r="3" fill="#1E293B"/><text x="100" y="118" text-anchor="middle" font-size="10" fill="#F97316">⚠ DELAYED</text></svg>`,
+  negotiate: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F0FDF4"/><circle cx="50" cy="45" r="18" fill="#86EFAC"/><text x="50" y="51" text-anchor="middle" font-size="18">👤</text><circle cx="150" cy="45" r="18" fill="#BBF7D0"/><text x="150" y="51" text-anchor="middle" font-size="18">👤</text><rect x="30" y="70" width="50" height="22" rx="8" fill="white" stroke="#4ADE80" stroke-width="1.5"/><text x="55" y="85" text-anchor="middle" font-size="9" fill="#166534">Let's deal!</text><rect x="120" y="70" width="50" height="22" rx="8" fill="white" stroke="#4ADE80" stroke-width="1.5"/><text x="145" y="85" text-anchor="middle" font-size="9" fill="#166534">Agreed! ✓</text></svg>`,
+  freight: `<svg viewBox="0 0 200 120"><rect x="0" y="70" width="200" height="50" fill="#E0F2FE"/><rect x="0" y="65" width="200" height="8" fill="#7DD3FC"/><rect x="5" y="30" width="130" height="42" rx="4" fill="#FEF9C3" stroke="#EAB308" stroke-width="1.5"/><text x="30" y="55" text-anchor="middle" font-size="14">📦</text><text x="70" y="55" text-anchor="middle" font-size="14">📦</text><text x="110" y="55" text-anchor="middle" font-size="14">📦</text><rect x="135" y="42" width="50" height="30" rx="3" fill="#BAE6FD"/><rect x="153" y="48" width="24" height="18" rx="1" fill="#0EA5E9"/><circle cx="30" cy="78" r="10" fill="#334155"/><circle cx="30" cy="78" r="5" fill="#94A3B8"/><circle cx="155" cy="78" r="10" fill="#334155"/><circle cx="155" cy="78" r="5" fill="#94A3B8"/></svg>`,
+  clearance: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F0FDF4"/><rect x="60" y="20" width="80" height="90" rx="4" fill="white" stroke="#86EFAC" stroke-width="2"/><rect x="70" y="32" width="60" height="5" rx="2" fill="#BBF7D0"/><rect x="70" y="42" width="50" height="5" rx="2" fill="#BBF7D0"/><rect x="70" y="52" width="55" height="5" rx="2" fill="#BBF7D0"/><rect x="70" y="62" width="45" height="5" rx="2" fill="#BBF7D0"/><circle cx="100" cy="90" r="16" fill="#22C55E"><animate attributeName="r" values="14;16;14" dur="1s" repeatCount="indefinite"/></circle><text x="100" y="96" text-anchor="middle" font-size="16" fill="white">✓</text></svg>`,
+  invoice: `<svg viewBox="0 0 200 120"><rect x="40" y="8" width="120" height="104" rx="4" fill="white" stroke="#CBD5E1" stroke-width="1.5"/><rect x="50" y="18" width="70" height="6" rx="2" fill="#94A3B8"/><rect x="50" y="30" width="40" height="4" rx="2" fill="#CBD5E1"/><rect x="50" y="38" width="55" height="4" rx="2" fill="#CBD5E1"/><rect x="50" y="46" width="48" height="4" rx="2" fill="#CBD5E1"/><line x1="50" y1="58" x2="150" y2="58" stroke="#E2E8F0" stroke-width="1"/><rect x="50" y="66" width="60" height="4" rx="2" fill="#BFDBFE"/><rect x="120" y="66" width="22" height="4" rx="2" fill="#3B82F6"/><rect x="50" y="76" width="55" height="4" rx="2" fill="#BFDBFE"/><rect x="120" y="76" width="28" height="4" rx="2" fill="#3B82F6"/><rect x="105" y="96" width="37" height="6" rx="2" fill="#1D4ED8"><animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/></rect><text x="50" y="102" font-size="8" fill="#64748B">TOTAL</text></svg>`,
+  tariff: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#FFF7ED"/><rect x="30" y="20" width="60" height="80" rx="4" fill="#FED7AA" stroke="#FB923C" stroke-width="1.5"/><text x="60" y="65" text-anchor="middle" font-size="22">🏭</text><rect x="110" y="20" width="60" height="80" rx="4" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1.5"/><text x="140" y="65" text-anchor="middle" font-size="22">🌍</text><rect x="85" y="48" width="30" height="22" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/><text x="100" y="63" text-anchor="middle" font-size="10" fill="#92400E">TAX</text><text x="100" y="110" text-anchor="middle" font-size="9" fill="#9A3412">Import duty applied</text></svg>`,
+  permit: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F5F3FF"/><rect x="45" y="10" width="110" height="90" rx="6" fill="white" stroke="#A78BFA" stroke-width="2"/><text x="100" y="38" text-anchor="middle" font-size="18">📋</text><rect x="60" y="48" width="80" height="5" rx="2" fill="#DDD6FE"/><rect x="65" y="58" width="70" height="4" rx="2" fill="#EDE9FE"/><rect x="65" y="67" width="65" height="4" rx="2" fill="#EDE9FE"/><text x="100" y="90" text-anchor="middle" font-size="11" fill="#7C3AED">APPROVED</text><circle cx="148" cy="86" r="10" fill="none" stroke="#7C3AED" stroke-width="1.5"><animate attributeName="r" values="8;11;8" dur="1.2s" repeatCount="indefinite"/></circle></svg>`,
+  comply: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F0FDF4"/><rect x="20" y="15" width="75" height="90" rx="4" fill="white" stroke="#86EFAC" stroke-width="1.5"/><rect x="30" y="28" width="55" height="4" rx="2" fill="#BBF7D0"/><rect x="30" y="38" width="45" height="4" rx="2" fill="#BBF7D0"/><rect x="30" y="48" width="50" height="4" rx="2" fill="#BBF7D0"/><rect x="30" y="58" width="40" height="4" rx="2" fill="#BBF7D0"/><rect x="30" y="68" width="48" height="4" rx="2" fill="#BBF7D0"/><rect x="105" y="15" width="75" height="90" rx="4" fill="white" stroke="#86EFAC" stroke-width="1.5"/><text x="142" y="45" text-anchor="middle" font-size="11" fill="#166534">Rule 1</text><text x="142" y="68" text-anchor="middle" font-size="11" fill="#166534">Rule 2</text><circle cx="168" cy="90" r="12" fill="#22C55E"><animate attributeName="opacity" values="1;0.6;1" dur="1.2s" repeatCount="indefinite"/></circle><text x="168" y="94" text-anchor="middle" font-size="12" fill="white">✓</text></svg>`,
+  declare: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#EFF6FF"/><rect x="25" y="15" width="90" height="90" rx="4" fill="white" stroke="#93C5FD" stroke-width="1.5"/><rect x="35" y="28" width="70" height="5" rx="2" fill="#BFDBFE"/><rect x="35" y="39" width="60" height="5" rx="2" fill="#DBEAFE"/><rect x="35" y="50" width="65" height="5" rx="2" fill="#DBEAFE"/><rect x="35" y="61" width="55" height="5" rx="2" fill="#DBEAFE"/><rect x="35" y="78" width="70" height="12" rx="3" fill="#3B82F6"/><text x="70" y="88" text-anchor="middle" font-size="9" fill="white">DECLARE</text><text x="150" y="50" text-anchor="middle" font-size="28">🛂</text></svg>`,
+  inspect: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#FEFCE8"/><rect x="15" y="25" width="100" height="70" rx="3" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.5"/><rect x="25" y="35" width="30" height="22" rx="2" fill="#FDE68A"/><rect x="65" y="35" width="30" height="22" rx="2" fill="#FDE68A"/><rect x="25" y="65" width="30" height="22" rx="2" fill="#FDE68A"/><rect x="65" y="65" width="30" height="22" rx="2" fill="#FDE68A"/><circle cx="148" cy="55" r="22" fill="none" stroke="#78716C" stroke-width="3"/><line x1="163" y1="70" x2="178" y2="85" stroke="#78716C" stroke-width="4" stroke-linecap="round"/><circle cx="148" cy="55" r="5" fill="none" stroke="#EF4444" stroke-width="1.5"><animate attributeName="r" values="3;7;3" dur="1.5s" repeatCount="indefinite"/></circle></svg>`,
+  achieve: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#FFF7ED"/><polygon points="100,10 115,45 155,45 123,67 135,102 100,80 65,102 77,67 45,45 85,45" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"><animate attributeName="opacity" values="1;0.7;1" dur="1s" repeatCount="indefinite"/></polygon><text x="100" y="115" text-anchor="middle" font-size="9" fill="#92400E">ACHIEVEMENT</text></svg>`,
+  manage: `<svg viewBox="0 0 200 120"><circle cx="100" cy="28" r="16" fill="#93C5FD"/><text x="100" y="34" text-anchor="middle" font-size="14">👤</text><line x1="70" y1="52" x2="55" y2="72" stroke="#60A5FA" stroke-width="2"/><line x1="130" y1="52" x2="145" y2="72" stroke="#60A5FA" stroke-width="2"/><line x1="100" y1="52" x2="100" y2="72" stroke="#60A5FA" stroke-width="2"/><circle cx="45" cy="84" r="12" fill="#BFDBFE"/><text x="45" y="89" text-anchor="middle" font-size="11">👤</text><circle cx="100" cy="84" r="12" fill="#BFDBFE"/><text x="100" y="89" text-anchor="middle" font-size="11">👤</text><circle cx="155" cy="84" r="12" fill="#BFDBFE"/><text x="155" y="89" text-anchor="middle" font-size="11">👤</text></svg>`,
+  expand: `<svg viewBox="0 0 200 120"><rect x="75" y="40" width="50" height="40" rx="3" fill="#6EE7B7" stroke="#10B981" stroke-width="1.5"/><text x="100" y="65" text-anchor="middle" font-size="18">📈</text><line x1="55" y1="70" x2="75" y2="65" stroke="#10B981" stroke-width="1.5" stroke-dasharray="3"/><line x1="145" y1="70" x2="125" y2="65" stroke="#10B981" stroke-width="1.5" stroke-dasharray="3"/></svg>`,
+  reduce: `<svg viewBox="0 0 200 120"><rect x="0" y="70" width="200" height="50" fill="#DCFCE7"/><rect x="30" y="25" width="20" height="48" rx="2" fill="#94A3B8"/><rect x="60" y="38" width="20" height="35" rx="2" fill="#94A3B8"/><rect x="90" y="15" width="20" height="58" rx="2" fill="#94A3B8"/><text x="30" y="17" text-anchor="middle" font-size="11">💨</text><text x="60" y="30" text-anchor="middle" font-size="11">💨</text><text x="90" y="7" text-anchor="middle" font-size="11">💨</text><rect x="130" y="50" width="20" height="23" rx="2" fill="#6EE7B7"/><rect x="160" y="58" width="20" height="15" rx="2" fill="#6EE7B7"/><text x="140" y="43" text-anchor="middle" font-size="11">🌱</text><text x="170" y="50" text-anchor="middle" font-size="11">🌱</text></svg>`,
+  sustainable: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F0FDF4"/><text x="35" y="55" text-anchor="middle" font-size="34">🌱</text><text x="100" y="55" text-anchor="middle" font-size="34">☀️</text><text x="165" y="55" text-anchor="middle" font-size="34">💧</text><rect x="20" y="70" width="45" height="14" rx="4" fill="#BBF7D0"/><text x="42" y="81" text-anchor="middle" font-size="9" fill="#166534">Earth</text><rect x="78" y="70" width="45" height="14" rx="4" fill="#FEF9C3"/><text x="100" y="81" text-anchor="middle" font-size="9" fill="#854D0E">Energy</text><rect x="135" y="70" width="45" height="14" rx="4" fill="#DBEAFE"/><text x="157" y="81" text-anchor="middle" font-size="9" fill="#1E40AF">Water</text><text x="100" y="108" text-anchor="middle" font-size="10" fill="#166534">🌍 Sustainable future</text></svg>`,
+  generate: `<svg viewBox="0 0 200 120"><rect x="0" y="80" width="200" height="40" fill="#FEF9C3"/><rect x="20" y="40" width="30" height="42" rx="2" fill="#FDE047"/><text x="35" y="16" text-anchor="middle" font-size="10">☀️</text><text x="130" y="55" text-anchor="middle" font-size="28">⚡</text></svg>`,
+  benefit: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F0FDF4"/><text x="35" y="58" text-anchor="middle" font-size="36">🏃</text><rect x="68" y="18" width="118" height="84" rx="6" fill="white" stroke="#86EFAC" stroke-width="1.5"/><text x="80" y="38" font-size="11" fill="#166534">💪 Stronger muscles</text><text x="80" y="55" font-size="11" fill="#166534">❤️ Healthy heart</text><text x="80" y="72" font-size="11" fill="#166534">😴 Better sleep</text><text x="80" y="89" font-size="11" fill="#166534">😊 Happier mood</text></svg>`,
+  harmful: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#FFF1F2"/><text x="50" y="68" text-anchor="middle" font-size="42">🚬</text><circle cx="140" cy="60" r="42" fill="#FEF2F2" stroke="#FECACA" stroke-width="2"/><line x1="110" y1="30" x2="170" y2="90" stroke="#EF4444" stroke-width="5" stroke-linecap="round"/><line x1="170" y1="30" x2="110" y2="90" stroke="#EF4444" stroke-width="5" stroke-linecap="round"/><text x="140" y="112" text-anchor="middle" font-size="10" fill="#DC2626">HARMFUL ⚠</text></svg>`,
+  default: `<svg viewBox="0 0 200 120"><rect x="0" y="0" width="200" height="120" fill="#F8FAFC"/><text x="100" y="68" text-anchor="middle" font-size="40">📖</text></svg>`
+};
+
+function getIllus(word) { return ILLUS_SVG[word] || ILLUS_SVG.default; }
+
+// ── Data ──
+const ALL_WORDS = [
+  {word:"achieve",   vn:"đạt được",          ipa:"/əˈtʃiːv/",      example:"She worked hard to ___ her goals.",            topic:"Work"},
+  {word:"benefit",   vn:"lợi ích",            ipa:"/ˈbenɪfɪt/",     example:"Exercise has many ___ for your health.",       topic:"Health"},
+  {word:"capable",   vn:"có khả năng",        ipa:"/ˈkeɪpəbl/",     example:"She is ___ of doing the job.",                 topic:"Work"},
+  {word:"delay",     vn:"trì hoãn",           ipa:"/dɪˈleɪ/",       example:"The flight had a two-hour ___.",               topic:"Travel"},
+  {word:"efficient", vn:"hiệu quả",           ipa:"/ɪˈfɪʃnt/",      example:"We need a more ___ system.",                  topic:"Work"},
+  {word:"flexible",  vn:"linh hoạt",          ipa:"/ˈfleksɪbl/",    example:"The job offers ___ working hours.",            topic:"Work"},
+  {word:"generate",  vn:"tạo ra",             ipa:"/ˈdʒenəreɪt/",   example:"Solar panels ___ electricity.",               topic:"Technology"},
+  {word:"harmful",   vn:"có hại",             ipa:"/ˈhɑːrmfl/",     example:"Smoking is ___ to your health.",              topic:"Health"},
+  {word:"impact",    vn:"tác động",           ipa:"/ˈɪmpækt/",      example:"The new law had a big ___ on business.",       topic:"Work"},
+  {word:"journey",   vn:"hành trình",         ipa:"/ˈdʒɜːrni/",     example:"The ___ from Hanoi to HCMC takes 2 hours.",    topic:"Travel"},
+  {word:"knowledge", vn:"kiến thức",          ipa:"/ˈnɒlɪdʒ/",      example:"She has great ___ of customs law.",           topic:"Work"},
+  {word:"manage",    vn:"quản lý",            ipa:"/ˈmænɪdʒ/",      example:"She has to ___ a large team.",                topic:"Work"},
+  {word:"negotiate", vn:"đàm phán",           ipa:"/nɪˈɡoʊʃieɪt/",  example:"We need to ___ a better price.",              topic:"Work"},
+  {word:"opportunity",vn:"cơ hội",           ipa:"/ˌɒpəˈtjuːnɪti/",example:"This is a great ___ for growth.",             topic:"Work"},
+  {word:"reduce",    vn:"giảm",              ipa:"/rɪˈdjuːs/",      example:"We must ___ carbon emissions.",               topic:"Environment"},
+  {word:"expand",    vn:"mở rộng",           ipa:"/ɪkˈspænd/",      example:"The company plans to ___ to new markets.",     topic:"Work"},
+  {word:"customs",   vn:"hải quan",          ipa:"/ˈkʌstəmz/",      example:"___ officers checked all the packages.",       topic:"Import-Export"},
+  {word:"declare",   vn:"khai báo",          ipa:"/dɪˈkler/",       example:"You must ___ all goods at the border.",        topic:"Import-Export"},
+  {word:"inspect",   vn:"kiểm tra",          ipa:"/ɪnˈspekt/",      example:"Officers will ___ the cargo.",                topic:"Import-Export"},
+  {word:"permit",    vn:"giấy phép",         ipa:"/ˈpɜːrmɪt/",      example:"You need a special ___ to import this.",       topic:"Import-Export"},
+  {word:"shipment",  vn:"lô hàng",           ipa:"/ˈʃɪpmənt/",      example:"The ___ arrived three days late.",             topic:"Import-Export"},
+  {word:"comply",    vn:"tuân thủ",          ipa:"/kəmˈplaɪ/",      example:"All factories must ___ with safety rules.",    topic:"Import-Export"},
+  {word:"tariff",    vn:"thuế quan",         ipa:"/ˈtærɪf/",        example:"The government raised the ___ on steel.",      topic:"Import-Export"},
+  {word:"invoice",   vn:"hóa đơn",           ipa:"/ˈɪnvɔɪs/",       example:"Please send the ___ before shipping.",         topic:"Import-Export"},
+  {word:"freight",   vn:"vận tải hàng hóa", ipa:"/freɪt/",          example:"The ___ cost has increased this year.",        topic:"Import-Export"},
+  {word:"clearance", vn:"thông quan",        ipa:"/ˈklɪərəns/",     example:"We are waiting for customs ___.",              topic:"Import-Export"},
+  {word:"warehouse", vn:"nhà kho",           ipa:"/ˈwerhaʊs/",      example:"The goods are stored in the ___.",             topic:"Import-Export"},
+  {word:"sustainable",vn:"bền vững",         ipa:"/səˈsteɪnəbl/",   example:"We need ___ energy sources.",                 topic:"Environment"},
+];
+
+const UNIQUE = Array.from(new Map(ALL_WORDS.map(w=>[w.word,w])).values());
+const TOPICS = ["Tất cả", ...Array.from(new Set(UNIQUE.map(w=>w.topic)))];
+const MODES = ["multiple_choice","fill_blank","flashcard"];
+const MODE_LABELS = {multiple_choice:"Trắc nghiệm", fill_blank:"Điền từ", flashcard:"Flashcard"};
+const SRS_INT = [1,3,7,14,30,60];
+const SK = "wm_srs_v3";
+
+// ── Helpers ──
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
+function getWrong(c,pool){return shuffle(pool.filter(w=>w.word!==c.word)).slice(0,3).map(w=>w.vn);}
+function speak(t){if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=0.85;window.speechSynthesis.speak(u);}
+function isDue(d){if(!d||!d.nextReview)return true;return Date.now()>=d.nextReview;}
+function loadSRS(){try{return JSON.parse(localStorage.getItem(SK)||"{}");}catch{return{};}}
+function saveSRS(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch{}}
+
+// ── State ──
+let state = {
+  screen: "home",
+  mode: "multiple_choice",
+  topic: "Tất cả",
+  queue: [],
+  idx: 0,
+  xp: 0,
+  streak: 0,
+  choices: [],
+  selected: null,
+  flipped: false,
+  input: "",
+  inputResult: null,
+  sCorr: 0,
+  sTotal: 0,
+  srs: loadSRS(),
+  showSRS: false,
+  cardAnim: "",
+  resultAnim: "",
+};
+
+function getFiltered() {
+  return state.topic === "Tất cả" ? UNIQUE : UNIQUE.filter(w=>w.topic===state.topic);
+}
+function getDue() {
+  return getFiltered().filter(w=>isDue(state.srs[w.word]));
+}
+
+function setState(patch) {
+  Object.assign(state, patch);
+  render();
+}
+
+function buildChoices(word, pool) {
+  return shuffle([word.vn, ...getWrong(word, pool)]);
+}
+
+function startGame(m, pool) {
+  const filtered = getFiltered();
+  const due = getDue();
+  const p = pool || shuffle(due.length>=5?due:filtered).slice(0,12);
+  const choices = m==="multiple_choice"&&p.length ? buildChoices(p[0],filtered) : [];
+  setState({queue:p,idx:0,sCorr:0,sTotal:0,selected:null,flipped:false,input:"",inputResult:null,choices,cardAnim:"card-pop",screen:"game",mode:m});
+  setTimeout(()=>{ const inp=document.getElementById("fill-input"); if(inp) inp.focus(); },100);
+}
+
+function animateCard(anim) {
+  setState({cardAnim:""});
+  setTimeout(()=>setState({cardAnim:anim}),10);
+}
+
+function advance(correct) {
+  const current = state.queue[state.idx];
+  const w = current.word;
+  const prev = state.srs[w]||{level:0};
+  const nl = correct ? Math.min((prev.level||0)+1, SRS_INT.length-1) : 0;
+  const newSrs = {...state.srs, [w]:{level:nl,nextReview:Date.now()+SRS_INT[nl]*86400000,lastCorrect:correct}};
+  saveSRS(newSrs);
+  const newSCorr = state.sCorr + (correct?1:0);
+  const newSTotal = state.sTotal + 1;
+  const newXp = state.xp + (correct?10:0);
+  const newStreak = correct ? state.streak+1 : 0;
+  setState({srs:newSrs,sCorr:newSCorr,sTotal:newSTotal,xp:newXp,streak:newStreak});
+  if(correct) animateCard("card-pop"); else animateCard("card-shake");
+  const ni = state.idx+1;
+  setTimeout(()=>{
+    if(ni>=state.queue.length){setState({screen:"result"});}
+    else{
+      const filtered=getFiltered();
+      const choices=state.mode==="multiple_choice"?buildChoices(state.queue[ni],filtered):[];
+      setState({idx:ni,selected:null,flipped:false,input:"",inputResult:null,choices,cardAnim:"slide-up"});
+      setTimeout(()=>{ const inp=document.getElementById("fill-input"); if(inp) inp.focus(); },80);
+    }
+  }, correct?600:900);
+}
+
+function handleChoice(c) {
+  if(state.selected) return;
+  const current = state.queue[state.idx];
+  const ok = c===current.vn;
+  setState({selected:c, resultAnim:ok?"correct-glow":""});
+  setTimeout(()=>{advance(ok); setState({resultAnim:""});},800);
+}
+
+function handleFill() {
+  if(state.inputResult) return;
+  const current = state.queue[state.idx];
+  const ok = state.input.trim().toLowerCase()===current.word.toLowerCase();
+  setState({inputResult:ok?"correct":"wrong"});
+  setTimeout(()=>advance(ok),900);
+}
+
+// ── Render ──
+function renderDots(lvl) {
+  return [0,1,2,3,4,5].map(n=>`<span class="srs-dot" style="background:${n<lvl?'#22C55E':'var(--border-strong)'}"></span>`).join(" ");
+}
+
+function render() {
+  const filtered = getFiltered();
+  const due = getDue();
+  const current = state.queue[state.idx];
+  const level = Math.floor(state.xp/100)+1;
+  const mastered = Object.values(state.srs).filter(v=>v.level>=3).length;
+  const srsLvl = current&&state.srs[current.word] ? state.srs[current.word].level||0 : 0;
+
+  let html = "";
+
+  // ── SRS Screen ──
+  if(state.showSRS) {
+    const rows = UNIQUE.filter(w=>state.srs[w.word]).map((w,i,arr)=>{
+      const d=state.srs[w.word]; const due2=isDue(d); const lvl=d.level||0;
+      const days=d.nextReview?Math.max(0,Math.round((d.nextReview-Date.now())/86400000)):0;
+      return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:${i<arr.length-1?'0.5px solid var(--border)':'none'};background:${due2?'var(--bg-warning)':'transparent'}">
+        <div style="flex:1"><span style="font-weight:500;font-size:13px">${w.word}</span><span style="color:var(--text-muted);font-size:12px;margin-left:6px">${w.vn}</span></div>
+        <div style="display:flex;gap:3px">${renderDots(lvl)}</div>
+        <span style="font-size:11px;color:${due2?'var(--text-warning)':'var(--text-muted)'};min-width:55px;text-align:right">${due2?"Ôn ngay":"còn "+days+"n"}</span>
+      </div>`;
+    }).join("");
+    html = `<div class="screen">
+      <button onclick="setState({showSRS:false})" style="background:transparent;border:none;cursor:pointer;color:var(--text-secondary);font-size:13px;margin-bottom:1rem">← Quay lại</button>
+      <h2 style="font-size:18px;font-weight:500;margin:0 0 4px">Nhắc lại định kỳ</h2>
+      <p style="color:var(--text-secondary);font-size:12px;margin-bottom:1.25rem">Khoảng cách ôn tăng dần: 1 → 3 → 7 → 14 → 30 → 60 ngày</p>
+      <div class="grid-3" style="margin-bottom:1.25rem">
+        <div class="stat-card"><div class="stat-label">Ôn hôm nay</div><div class="stat-value" style="color:var(--text-danger)">${due.length}</div></div>
+        <div class="stat-card"><div class="stat-label">Đang học</div><div class="stat-value">${Object.keys(state.srs).length}</div></div>
+        <div class="stat-card"><div class="stat-label">Đã thuộc</div><div class="stat-value" style="color:var(--text-success)">${mastered}</div></div>
+      </div>
+      <div style="border-radius:10px;border:0.5px solid var(--border);overflow:hidden">
+        ${rows||'<div style="padding:2rem;text-align:center;color:var(--text-muted);font-size:13px">Chưa có từ nào — bắt đầu luyện tập!</div>'}
+      </div>
+    </div>`;
+    document.getElementById("root").innerHTML = html; return;
+  }
+
+  // ── Home ──
+  if(state.screen==="home") {
+    const dueBanner = due.length>0 ? `<div class="due-banner" onclick="startGame(state.mode, shuffle(getDue()).slice(0,12))">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--text-accent)">📅 ${due.length} từ cần ôn hôm nay</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Nhắc lại định kỳ — ôn trước để nhớ lâu</div>
+      </div>
+      <span style="font-size:13px;color:var(--text-accent);font-weight:500">Ôn ngay →</span>
+    </div>` : "";
+    const topicBtns = TOPICS.map(t=>`<button class="pill-btn" onclick="setState({topic:'${t}'})" style="border:0.5px solid ${state.topic===t?'var(--border-accent)':'var(--border)'};background:${state.topic===t?'var(--bg-accent)':'var(--surface-1)'};color:${state.topic===t?'var(--text-accent)':'var(--text-secondary)'};font-weight:${state.topic===t?500:400}">${t}</button>`).join("");
+    const modeTabs = MODES.map(m=>`<button class="mode-tab" onclick="setState({mode:'${m}'})" style="background:${state.mode===m?'var(--surface-2)':'transparent'};color:${state.mode===m?'var(--text-primary)':'var(--text-secondary)'}">${MODE_LABELS[m]}</button>`).join("");
+    html = `<div class="screen">
+      <div class="flex-between" style="margin-bottom:1.25rem">
+        <div>
+          <div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:1px;margin-bottom:4px">B1+ WORD MASTER</div>
+          <h1 style="font-size:22px;font-weight:500">Luyện từ vựng tiếng Anh</h1>
+        </div>
+        <button onclick="setState({showSRS:true})" style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;color:var(--text-secondary)">📅 SRS</button>
+      </div>
+      ${dueBanner}
+      <div class="grid-3" style="margin-bottom:1rem">
+        <div class="stat-card"><div style="font-size:16px;margin-bottom:2px">🏅</div><div class="stat-label">Level</div><div style="font-size:20px;font-weight:500">${level}</div></div>
+        <div class="stat-card"><div style="font-size:16px;margin-bottom:2px">⭐</div><div class="stat-label">XP</div><div style="font-size:20px;font-weight:500">${state.xp}</div></div>
+        <div class="stat-card"><div style="font-size:16px;margin-bottom:2px">🔥</div><div class="stat-label">Chuỗi</div><div style="font-size:20px;font-weight:500">${state.streak}</div></div>
+      </div>
+      <div style="margin-bottom:1rem">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">Chủ đề</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${topicBtns}</div>
+      </div>
+      <div style="background:var(--surface-1);border-radius:10px;padding:4px;display:flex;gap:4px;margin-bottom:1rem">${modeTabs}</div>
+      <button class="main-btn" onclick="startGame(state.mode)">Bắt đầu luyện tập →</button>
+    </div>`;
+    document.getElementById("root").innerHTML = html; return;
+  }
+
+  // ── Result ──
+  if(state.screen==="result") {
+    const emoji = state.sCorr===state.sTotal?"🏆":state.sCorr>=state.sTotal*0.7?"⭐":"💪";
+    html = `<div class="screen-result">
+      <div style="font-size:52px;margin-bottom:10px;animation:pop 0.5s ease both">${emoji}</div>
+      <h2 style="font-size:20px;font-weight:500;margin:0 0 6px">Hoàn thành!</h2>
+      <p style="color:var(--text-secondary);margin-bottom:1.5rem;font-size:14px">Đúng <strong>${state.sCorr}/${state.sTotal}</strong> từ · +${state.sCorr*10} XP</p>
+      <div class="grid-2" style="margin-bottom:1.5rem">
+        <div class="stat-card" style="animation:slideUp 0.3s 0s both"><div class="stat-label">Đúng</div><div style="font-size:20px;font-weight:500;color:var(--text-success)">${state.sCorr}</div></div>
+        <div class="stat-card" style="animation:slideUp 0.3s 0.08s both"><div class="stat-label">Sai</div><div style="font-size:20px;font-weight:500;color:var(--text-danger)">${state.sTotal-state.sCorr}</div></div>
+        <div class="stat-card" style="animation:slideUp 0.3s 0.16s both"><div class="stat-label">XP tổng</div><div style="font-size:20px;font-weight:500">${state.xp}</div></div>
+        <div class="stat-card" style="animation:slideUp 0.3s 0.24s both"><div class="stat-label">Level</div><div style="font-size:20px;font-weight:500">${level}</div></div>
+      </div>
+      <div class="flex-row">
+        <button style="flex:1;padding:13px;background:var(--text-primary);color:var(--surface-2);border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer" onclick="startGame(state.mode)">Chơi lại</button>
+        <button class="secondary-btn" onclick="setState({screen:'home'})">Trang chủ</button>
+      </div>
+    </div>`;
+    document.getElementById("root").innerHTML = html; return;
+  }
+
+  // ── Game ──
+  if(!current){document.getElementById("root").innerHTML="";return;}
+  const pct = (state.idx/state.queue.length)*100;
+
+  let cardContent = "";
+  if(state.mode==="flashcard") {
+    if(!state.flipped) {
+      cardContent = `<div onclick="setState({flipped:true})" style="cursor:pointer;text-align:center;padding:0.5rem 0;user-select:none">
+        <div class="flashcard-word">${current.word}</div>
+        <div class="flashcard-hint">Nhấn để xem nghĩa ↓</div>
+      </div>`;
+    } else {
+      cardContent = `<div onclick="setState({flipped:false})" style="cursor:pointer;text-align:center;padding:0.5rem 0;animation:slideUp 0.25s ease">
+        <div class="flashcard-vn">${current.vn}</div>
+        <div class="flashcard-ex">${current.example.replace("___",`[${current.word}]`)}</div>
+      </div>`;
+    }
+  } else if(state.mode==="multiple_choice") {
+    cardContent = `<div style="font-size:34px;font-weight:500;margin:4px 0 8px">${current.word}</div>
+      <div style="font-size:15px;color:var(--text-secondary);font-style:italic;line-height:1.6">${current.example.replace("___","______")}</div>`;
+  } else {
+    cardContent = `<div style="font-size:15px;color:var(--text-secondary);font-style:italic;line-height:1.7;margin-bottom:8px">${current.example.replace("___","________")}</div>
+      <div style="font-size:15px;color:var(--text-muted)">Nghĩa: <strong style="color:var(--text-primary);font-size:16px">${current.vn}</strong></div>`;
+  }
+
+  let actionArea = "";
+  if(state.mode==="multiple_choice") {
+    const btns = state.choices.map((c,i)=>{
+      const isC=c===current.vn, isSel=state.selected===c;
+      let bg="var(--surface-1)", border="0.5px solid var(--border)", col="var(--text-primary)";
+      if(state.selected){
+        if(isC){bg="var(--bg-success)";border="1.5px solid var(--border-success)";col="var(--text-success)";}
+        else if(isSel){bg="var(--bg-danger)";border="1.5px solid var(--border-danger)";col="var(--text-danger)";}
+      }
+      const prefix = state.selected&&isC?"✓ ":state.selected&&isSel&&!isC?"✗ ":"";
+      return `<button class="btn-choice" ${state.selected?'disabled':''} onclick="handleChoice('${c.replace(/'/g,"\\'")}'))" style="padding:16px 10px;background:${bg};border:${border};border-radius:10px;font-size:15px;font-weight:500;color:${col};animation-delay:${i*0.06}s">${prefix}${c}</button>`;
+    }).join("");
+    actionArea = `<div class="grid-2 ${state.resultAnim}">${btns}</div>`;
+  } else if(state.mode==="fill_blank") {
+    const borderColor = state.inputResult==="correct"?"var(--border-success)":state.inputResult==="wrong"?"var(--border-danger)":"var(--border-strong)";
+    const feedback = state.inputResult ? `<div class="feedback-box" style="background:${state.inputResult==="correct"?'var(--bg-success)':'var(--bg-danger)'};color:${state.inputResult==="correct"?'var(--text-success)':'var(--text-danger)'}">
+      ${state.inputResult==="correct"?"✓ Chính xác! Thêm 10 XP":`✗ Đáp án đúng: "${current.word}"`}
+    </div>` : "";
+    actionArea = `<div>
+      <div class="flex-row">
+        <input id="fill-input" class="input-field" style="border:1.5px solid ${borderColor}" value="${state.input.replace(/"/g,'&quot;')}" placeholder="Nhập từ tiếng Anh..." oninput="state.input=this.value" onkeydown="if(event.key==='Enter')handleFill()"/>
+        <button class="ok-btn" onclick="handleFill()">OK</button>
+      </div>
+      ${feedback}
+    </div>`;
+  } else if(state.mode==="flashcard" && state.flipped) {
+    actionArea = `<div class="flex-row" style="margin-top:8px;animation:slideUp 0.25s ease">
+      <button class="fb-btn" onclick="advance(false)" style="background:var(--bg-danger);color:var(--text-danger);border:1px solid var(--border-danger)">😅 Chưa nhớ</button>
+      <button class="fb-btn" onclick="advance(true)" style="background:var(--bg-success);color:var(--text-success);border:1px solid var(--border-success)">✓ Đã nhớ!</button>
+    </div>`;
+  }
+
+  const streakMsg = state.streak>=3 ? `<div class="streak-msg">🔥 Chuỗi ${state.streak} từ liên tiếp — xuất sắc!</div>` : "";
+
+  html = `<div class="screen-game">
+    <div class="flex-between" style="margin-bottom:0.75rem">
+      <button onclick="setState({screen:'home'})" style="background:transparent;border:none;cursor:pointer;color:var(--text-secondary);font-size:13px">← Thoát</button>
+      <span style="font-size:13px;color:var(--text-secondary)">${state.idx+1}/${state.queue.length}</span>
+      <span style="font-size:12px;font-weight:500;color:var(--text-accent)">⭐ ${state.xp} XP</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="card-box ${state.cardAnim}">
+      <div class="illus-area">${getIllus(current.word)}</div>
+      <div class="word-info">
+        <div class="flex-between" style="margin-bottom:10px">
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="tag">${current.topic}</span>
+            <div style="display:flex;gap:2px">${renderDots(srsLvl)}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="ipa">${current.ipa}</span>
+            <button class="speak-btn" onclick="speak('${current.word}')">🔊</button>
+          </div>
+        </div>
+        ${cardContent}
+      </div>
+    </div>
+    ${actionArea}
+    ${streakMsg}
+  </div>`;
+
+  document.getElementById("root").innerHTML = html;
+}
+
+// Start
+render();
+</script>
+</body>
+</html>
